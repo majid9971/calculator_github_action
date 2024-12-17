@@ -1,16 +1,15 @@
-name: Build and SonarQube Analysis Workflow
+name: Build and SonarCloud Analysis Workflow
 
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
-  # Job 1: Build and SonarQube Analysis
   sonarqube:
-    name: SonarQube Analysis
+    name: SonarCloud Analysis
     runs-on: ubuntu-latest
 
     steps:
@@ -38,12 +37,9 @@ jobs:
         run: |
           mvn clean verify
 
-      # Step 5: Run SonarQube Analysis
-      - name: SonarQube Scan
+      # Step 5: SonarCloud Scan
+      - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4
-        env:
-          SONAR_HOST_URL: http://127.0.0.1:9000
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
             -Dsonar.projectKey=latest_java:master
@@ -55,17 +51,7 @@ jobs:
             -Dsonar.pdf.issue.details=BUG,CODE_SMELL,VULNERABILITY
             -Dsonar.pdf.other.metrics=uncovered_lines
             -Dsonar.pdf.skip=false
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # Job 2: Notify Slack (always runs, regardless of Job 1 result)
-  notify:
-    name: Notify Slack
-    runs-on: ubuntu-latest
-    needs: sonarqube
-    if: always()  # Always run the notification job
-
-    steps:
-      - name: Send Notification to Slack
-        run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text": "SonarQube analysis completed with status: ${{ needs.sonarqube.result }}."}' \
-          ${{ secrets.SLACK_WEBHOOK_URL }}
+ 
