@@ -42,7 +42,7 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v4
         with:
           args: >
-            -Dsonar.projectKey=latest_java:master
+            -Dsonar.projectKey=majid9971_latest-java
             -Dsonar.projectName=latest_java
             -Dsonar.projectVersion=1.8
             -Dsonar.sources=.
@@ -51,6 +51,8 @@ jobs:
             -Dsonar.pdf.issue.details=BUG,CODE_SMELL,VULNERABILITY
             -Dsonar.pdf.other.metrics=uncovered_lines
             -Dsonar.pdf.skip=false
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.organization=majid9971_latest-java
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
