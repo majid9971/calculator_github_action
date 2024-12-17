@@ -1,0 +1,6 @@
+projectKey=latest_java
+serverUrl=http://127.0.0.1:9000
+serverVersion=7.9.6.41879
+dashboardUrl=http://127.0.0.1:9000/dashboard?id=latest_java
+ceTaskId=AZPTT_iCYad1W9L8yyjM
+ceTaskUrl=http://127.0.0.1:9000/api/ce/task?id=AZPTT_iCYad1W9L8yyjM
