@@ -53,6 +53,7 @@ jobs:
             -Dsonar.pdf.skip=false
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.organization=majid9971
+            -Dsonar.branch.name=main 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
