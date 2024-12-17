@@ -42,7 +42,7 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v4
         with:
           args: >
-            -Dsonar.projectKey=majid9971_latest-java
+            -Dsonar.projectKey=majid9971_latest-java:main
             -Dsonar.projectName=latest_java
             -Dsonar.projectVersion=1.8
             -Dsonar.sources=.
