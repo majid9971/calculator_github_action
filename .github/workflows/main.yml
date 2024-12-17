@@ -52,7 +52,7 @@ jobs:
             -Dsonar.pdf.other.metrics=uncovered_lines
             -Dsonar.pdf.skip=false
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.organization=majid9971_latest-java
+            -Dsonar.organization=majid9971
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
