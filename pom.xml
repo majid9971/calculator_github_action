@@ -21,8 +21,6 @@
         <sonar.projectKey>latest_java</sonar.projectKey>
         <sonar.projectName>latest_java</sonar.projectName>
         <sonar.projectVersion>1.0</sonar.projectVersion>
-        <sonar.host.url>http://127.0.0.1:9000</sonar.host.url>
-        <sonar.login>50bd06df363a5ebbc748daadd3139a69fe29fc19</sonar.login>
         <sonar.sources>src/main/java</sonar.sources>
         <sonar.tests>src/test/java</sonar.tests>
         <sonar.java.binaries>target/classes</sonar.java.binaries>
@@ -79,11 +77,12 @@
             </plugin>
 
             <!-- SonarQube Maven Plugin -->
-            <plugin>
+            <!-- You can remove this plugin as you're using SonarCloud directly through GitHub Actions -->
+            <!-- <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.7.0.1746</version>
-            </plugin>
+            </plugin> -->
 
             <!-- Maven Surefire Plugin for Unit Testing -->
             <plugin>
