@@ -56,5 +56,24 @@ jobs:
             -Dsonar.branch.name=main 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+   # Step 6: Install JFrog CLI
+      - name: Install JFrog CLI
+        run: |
+          curl -fL https://getcli.jfrog.io | sh
+          chmod +x jfrog
+          sudo mv jfrog /usr/local/bin/
 
+      # Step 7: Configure JFrog CLI
+      - name: Configure JFrog CLI
+        env:
+          JFROG_URL: ${{ secrets.JFROG_URL }} # Set this secret in GitHub
+          JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }} # Set this secret in GitHub
+          JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }} # Set this secret in GitHub
+        run: |
+          jfrog rt config --url $JFROG_URL --user $JFROG_USERNAME --password $JFROG_PASSWORD
+
+      # Step 8: Upload Build Artifacts to JFrog
+      - name: Upload Build Artifacts to JFrog
+        run: |
+          jfrog rt u "target/*.jar" "repository-name/path/in/artifactory/"
  
