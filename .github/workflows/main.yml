@@ -67,9 +67,9 @@ jobs:
       # Step 7: Configure JFrog CLI
       - name: Configure JFrog CLI
         run: |
-          jfrog rt config --url https://trialkv5hgk.jfrog.io/artifactory \
-            --user reftkn \
-            --password cmVmdGtuOjAxOjE3NjYwNTI2NzE6OU91S2NxRmNWWVFGNzJtbzFjejdjcE0xWG5J
+         jfrog rt config --url ${{ secrets.JFROG_URL }} \
+          --user ${{ secrets.JFROG_USERNAME }} \
+          --password ${{ secrets.JFROG_PASSWORD }}G5J
 
       # Step 8: Upload Build Artifacts to JFrog
       - name: Upload Build Artifacts to JFrog
