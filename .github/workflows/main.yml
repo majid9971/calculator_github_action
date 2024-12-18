@@ -1,4 +1,4 @@
-name: Build and SonarCloud Analysis Workflow
+name: Build, SonarCloud Analysis, and JFrog Upload Workflow
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   sonarqube:
-    name: SonarCloud Analysis
+    name: SonarCloud Analysis and JFrog Upload
     runs-on: ubuntu-latest
 
     steps:
@@ -53,7 +53,7 @@ jobs:
             -Dsonar.pdf.skip=false
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.organization=majid9971
-            -Dsonar.branch.name=main 
+            -Dsonar.branch.name=main
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -67,11 +67,12 @@ jobs:
       # Step 7: Configure JFrog CLI
       - name: Configure JFrog CLI
         run: |
-         jfrog rt config --url ${{ secrets.JFROG_URL }} \
-          --user ${{ secrets.JFROG_USERNAME }} \
-          --password ${{ secrets.JFROG_PASSWORD }}G5J
+          jfrog config add my-server \
+            --artifactory-url ${{ secrets.JFROG_URL }} \
+            --user ${{ secrets.JFROG_USERNAME }} \
+            --password ${{ secrets.JFROG_PASSWORD }}
 
       # Step 8: Upload Build Artifacts to JFrog
       - name: Upload Build Artifacts to JFrog
         run: |
-          jfrog rt u "target/*.jar" "githubaction/path/in/artifactory/"
+          jfrog rt upload "target/*.jar" "my-repository/path/in/artifactory/"
