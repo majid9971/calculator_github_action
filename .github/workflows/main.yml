@@ -72,7 +72,7 @@ jobs:
             --user ${{ secrets.JFROG_USERNAME }} \
             --password ${{ secrets.JFROG_PASSWORD }}
 
-      # Step 8: Upload Build Artifacts to JFrog
+       # Step 8: Upload Build Artifacts to JFrog
       - name: Upload Build Artifacts to JFrog
         run: |
-          jfrog rt upload "target/*.jar" "my-repository/path/in/artifactory/"
+          jfrog rt upload "target/*.jar" "githubaction/githubaction/"
