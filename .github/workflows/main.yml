@@ -76,3 +76,17 @@ jobs:
       - name: Upload Build Artifacts to JFrog
         run: |
           jfrog rt upload "target/*.jar" "githubaction/githubaction/"
+
+          
+  notify:
+    runs-on: ubuntu-latest
+    needs:  sonarqube
+    if: always()  # Run this job regardless of the result of previous jobs
+
+    steps:
+      # Step 1: Send notification to Slack using Incoming Webhook
+      - name: Notify Slack
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text": "SonarQube analysis completed with status: ${{ needs.sonar.result }}."}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
