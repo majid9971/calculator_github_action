@@ -37,7 +37,10 @@ jobs:
         run: |
           mvn clean verify
 
-      # # Step 5: SonarCloud Scan
+       # Step 5: SonarCloud Scan
+      - name: Set executable permissions
+        run: chmod +x ./scripts/run-sonarqube-analysis.sh
+      
       - name: Run SonarQube Analysis
         run: ./scripts/run-sonarqube-analysis.sh
         env:
