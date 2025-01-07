@@ -57,13 +57,15 @@ while true; do
 done
 
 # Get the quality gate status
-QUALITY_GATE_STATUS=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$PROJECT_KEY" | jq -r '.projectStatus.status')
+QUALITY_GATE_STATUS=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$PROJECT_KEY")
 
-# Print the quality gate status for debugging
-echo "Quality Gate Status: $QUALITY_GATE_STATUS"
+# Print the full quality gate response for debugging
+echo "Quality Gate Status response: $QUALITY_GATE_STATUS"
 
 # Check if the quality gate passed or failed
-if [ "$QUALITY_GATE_STATUS" != "OK" ]; then
+QUALITY_GATE_STATUS_RESULT=$(echo "$QUALITY_GATE_STATUS" | jq -r '.projectStatus.status')
+
+if [ "$QUALITY_GATE_STATUS_RESULT" != "OK" ]; then
     echo "Quality gate failed! The analysis has failed due to quality gate conditions."
     exit 1
 else
