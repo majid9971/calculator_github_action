@@ -17,20 +17,26 @@ fi
 # Run SonarQube analysis
 echo "Running SonarQube analysis for project: $PROJECT_NAME"
 
-# Run SonarQube analysis
-mvn sonar:sonar \
+# Run SonarQube analysis and capture the task URL
+SONAR_OUTPUT=$(mvn sonar:sonar \
   -Dsonar.projectKey="$PROJECT_KEY" \
   -Dsonar.projectName="$PROJECT_NAME" \
   -Dsonar.branch.name="$BRANCH_NAME" \
   -Dsonar.projectVersion=1.9 \
   -Dsonar.host.url=https://sonarcloud.io \
   -Dsonar.organization=majid9971 \
-  -Dsonar.login="$SONAR_TOKEN"
+  -Dsonar.login="$SONAR_TOKEN")
 
-echo "SonarQube analysis completed."
+# Extract the analysis task ID from the Maven output
+TASK_URL=$(echo "$SONAR_OUTPUT" | grep -oP 'More about the report processing at \K.*')
+TASK_ID=$(echo "$TASK_URL" | grep -oP 'id=\K.*')
 
-# Get the task ID for the analysis report
-TASK_ID=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/ce/task?id=$PROJECT_KEY" | jq -r '.task.id')
+if [ -z "$TASK_ID" ]; then
+  echo "Error: Unable to extract TASK_ID from SonarQube analysis output."
+  exit 1
+fi
+
+echo "Task ID: $TASK_ID"
 
 # Wait for the analysis to finish
 echo "Waiting for SonarQube analysis to finish..."
@@ -43,15 +49,18 @@ while true; do
   TASK_STATUS=$(echo "$RESPONSE" | jq -r '.task.status')
 
   # If the task is finished, break out of the loop
-  if [ "$TASK_STATUS" == "FINISHED" ]; then
+  if [ "$TASK_STATUS" == "SUCCESS" ]; then
     break
+  elif [ "$TASK_STATUS" == "FAILED" ]; then
+    echo "Error: SonarQube task failed."
+    exit 1
   fi
 
   # Wait for 10 seconds before checking again
   sleep 10
 done
 
-# Fetch the quality gate status after task finishes
+# Fetch the quality gate status after the task finishes
 QUALITY_GATE_STATUS=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$PROJECT_KEY")
 
 # Print the full response to see the structure of the JSON data for debugging
