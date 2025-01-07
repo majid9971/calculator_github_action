@@ -73,9 +73,9 @@ jobs:
             --password ${{ secrets.JFROG_PASSWORD }}
 
        # Step 8: Upload Build Artifacts to JFrog
-      - name: Upload Build Artifacts to JFrog
-        run: |
-          jfrog rt upload "target/*.jar" "githubaction/githubaction/"
+    #  - name: Upload Build Artifacts to JFrog
+     #   run: |
+      #    jfrog rt upload "target/*.jar" "githubaction/githubaction/"
 
     # Step 9: Generate code coverage report
       - name: Generate code coverage report
