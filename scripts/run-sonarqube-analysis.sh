@@ -22,6 +22,7 @@ mvn sonar:sonar \
   -Dsonar.projectName="$PROJECT_NAME" \
   -Dsonar.branch.name="$BRANCH_NAME" \
   -Dsonar.host.url=https://sonarcloud.io \
+  -Dsonar.organization=majid9971 \
   -Dsonar.login="$SONAR_TOKEN"
 
 echo "SonarQube analysis completed."
