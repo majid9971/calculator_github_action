@@ -21,6 +21,7 @@ mvn sonar:sonar \
   -Dsonar.projectKey="$PROJECT_KEY" \
   -Dsonar.projectName="$PROJECT_NAME" \
   -Dsonar.branch.name="$BRANCH_NAME" \
+  -Dsonar.projectVersion=1.9
   -Dsonar.host.url=https://sonarcloud.io \
   -Dsonar.organization=majid9971 \
   -Dsonar.login="$SONAR_TOKEN"
