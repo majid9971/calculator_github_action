@@ -29,12 +29,26 @@ mvn sonar:sonar \
 echo "SonarQube analysis completed."
 
 # Retrieve the task ID from the SonarQube scanner logs
-TASK_ID=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/ce/task?id=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/project_analyses/search?project=$PROJECT_KEY&branch=$BRANCH_NAME" | jq -r '.[0].taskKey')")
+TASK_ID=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/project_analyses/search?project=$PROJECT_KEY&branch=$BRANCH_NAME" | jq -r '.[0].taskKey')
+
+# Print task ID for debugging
+echo "Task ID: $TASK_ID"
+
+# If TASK_ID is empty, fail the script
+if [ -z "$TASK_ID" ]; then
+    echo "Error: Task ID not found, the analysis might not have completed successfully."
+    exit 1
+fi
 
 # Wait for the analysis to finish (it can take a few seconds)
 echo "Waiting for SonarQube analysis to finish..."
 while true; do
-    STATUS=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/ce/task?id=$TASK_ID" | jq -r '.task.status')
+    RESPONSE=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/ce/task?id=$TASK_ID")
+    STATUS=$(echo "$RESPONSE" | jq -r '.task.status')
+    
+    # Print the full response for debugging
+    echo "Task status response: $RESPONSE"
+    
     if [[ "$STATUS" == "SUCCESS" || "$STATUS" == "FAILED" ]]; then
         break
     fi
@@ -44,6 +58,9 @@ done
 
 # Get the quality gate status
 QUALITY_GATE_STATUS=$(curl -s -u "$SONAR_TOKEN": "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$PROJECT_KEY" | jq -r '.projectStatus.status')
+
+# Print the quality gate status for debugging
+echo "Quality Gate Status: $QUALITY_GATE_STATUS"
 
 # Check if the quality gate passed or failed
 if [ "$QUALITY_GATE_STATUS" != "OK" ]; then
