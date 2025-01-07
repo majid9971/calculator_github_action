@@ -22,20 +22,69 @@ public class App {
         return a * b;
     }
 
-    // Duplicated method to trigger SonarQube quality gate failure due to code duplication
-    public int sumCopy(int x, int y) {
-        return x + y;
+    // Introduced larger duplicated code blocks
+
+    // Duplicated sum method
+    public int sumCopy1(int x, int y) {
+        int result = x + y;
+        return result;
     }
 
-    public int minusCopy(int x, int y) {
-        return x - y; 
+    public int sumCopy2(int x, int y) {
+        int result = x + y;
+        return result;
     }
 
-    public int divideCopy(int x, int y) {
-        return x / y;
+    public int sumCopy3(int x, int y) {
+        int result = x + y;
+        return result;
     }
 
-    public int multiplyCopy(int x, int y) {
-        return x * y;
+    // Duplicated minus method
+    public int minusCopy1(int x, int y) {
+        int result = x - y; 
+        return result;
+    }
+
+    public int minusCopy2(int x, int y) {
+        int result = x - y; 
+        return result;
+    }
+
+    public int minusCopy3(int x, int y) {
+        int result = x - y; 
+        return result;
+    }
+
+    // Duplicated divide method
+    public int divideCopy1(int x, int y) {
+        int result = x / y;
+        return result;
+    }
+
+    public int divideCopy2(int x, int y) {
+        int result = x / y;
+        return result;
+    }
+
+    public int divideCopy3(int x, int y) {
+        int result = x / y;
+        return result;
+    }
+
+    // Duplicated multiply method
+    public int multiplyCopy1(int x, int y) {
+        int result = x * y;
+        return result;
+    }
+
+    public int multiplyCopy2(int x, int y) {
+        int result = x * y;
+        return result;
+    }
+
+    public int multiplyCopy3(int x, int y) {
+        int result = x * y;
+        return result;
     }
 }
