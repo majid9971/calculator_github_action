@@ -1,0 +1,1 @@
+[![Build, SonarCloud Analysis, and JFrog Upload Workflow](https://github.com/majid9971/calculator_github_action/actions/workflows/main.yml/badge.svg)](https://github.com/majid9971/calculator_github_action/actions/workflows/main.yml)
