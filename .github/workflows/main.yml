@@ -102,12 +102,7 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
 
-      # Step 4: Upload CodeQL Results
-      - name: Upload CodeQL Results
-        uses: github/codeql-action/upload-results@v2
-        with:
-          upload-directory: ${{ github.workspace }}/codeql-results
-
+     
   notify:
     runs-on: ubuntu-latest
     needs: [sonarqube, codeql]  # This job depends on both SonarQube and CodeQL jobs
