@@ -10,8 +10,7 @@ on:
 jobs:
   sonarqube:
     name: SonarCloud Analysis and JFrog Upload
-    run
-    s-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       # Step 1: Checkout code
