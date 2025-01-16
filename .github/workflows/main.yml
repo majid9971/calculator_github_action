@@ -1,4 +1,4 @@
-name: Build, SonarCloud Analysis, and JFrog Upload Workflow
+name: Build, SonarCloud Analysis, CodeQL, and JFrog Upload Workflow
 
 on:
   push:
@@ -37,36 +37,16 @@ jobs:
         run: |
           mvn clean verify
 
-       # Step 5: SonarCloud Scan
+      # Step 5: SonarCloud Scan
       - name: Set executable permissions
         run: chmod +x ./scripts/run-sonarqube-analysis.sh
-      
+
       - name: Run SonarQube Analysis
         run: ./scripts/run-sonarqube-analysis.sh
         env:
-         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarqube-scan-action@v4
-      #   with:
-      #     args: >
-      #       -Dsonar.projectKey=majid9971_latest-java
-      #       -Dsonar.projectName=latest_java
-      #       -Dsonar.projectVersion=1.8
-      #       -Dsonar.sources=.
-      #       -Dsonar.java.binaries=target/classes
-      #       -Dsonar.jacoco.reportPaths=target/jacoco.exec
-      #       -Dsonar.pdf.issue.details=BUG,CODE_SMELL,VULNERABILITY
-      #       -Dsonar.pdf.other.metrics=uncovered_lines
-      #       -Dsonar.pdf.skip=false
-      #       -Dsonar.host.url=https://sonarcloud.io
-      #       -Dsonar.organization=majid9971
-      #       -Dsonar.branch.name=main
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-       # Step 6: Install JFrog CLI
+      # Step 6: Install JFrog CLI
       - name: Install JFrog CLI
         run: |
           curl -fL https://getcli.jfrog.io | sh
@@ -81,12 +61,13 @@ jobs:
             --user ${{ secrets.JFROG_USERNAME }} \
             --password ${{ secrets.JFROG_PASSWORD }}
 
-       # Step 8: Upload Build Artifacts to JFrog
-    #  - name: Upload Build Artifacts to JFrog
-     #   run: |
-      #    jfrog rt upload "target/*.jar" "githubaction/githubaction/"
+      # Step 8: Upload Build Artifacts to JFrog
+      # Uncomment the following if you want to upload artifacts to JFrog
+      # - name: Upload Build Artifacts to JFrog
+      #   run: |
+      #     jfrog rt upload "target/*.jar" "githubaction/githubaction/"
 
-    # Step 9: Generate code coverage report
+      # Step 9: Generate code coverage report
       - name: Generate code coverage report
         run: |
           mvn jacoco:report
@@ -97,10 +78,39 @@ jobs:
         with:
           name: code-coverage
           path: target/site/jacoco/index.html
-          
+
+  # **New Job for CodeQL Analysis**
+  codeql:
+    name: Run CodeQL Analysis
+    runs-on: ubuntu-latest
+    needs: sonarqube  # This job depends on the completion of the SonarQube job
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for CodeQL analysis
+
+      # Step 2: Set up CodeQL
+      - name: Set up CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: 'java'  # Specify Java as the language to be analyzed
+
+      # Step 3: Perform CodeQL Analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
+      # Step 4: Upload CodeQL Results
+      - name: Upload CodeQL Results
+        uses: github/codeql-action/upload-results@v2
+        with:
+          upload-directory: ${{ github.workspace }}/codeql-results
+
   notify:
     runs-on: ubuntu-latest
-    needs:  sonarqube
+    needs: [sonarqube, codeql]  # This job depends on both SonarQube and CodeQL jobs
     if: always()  # Run this job regardless of the result of previous jobs
 
     steps:
@@ -108,5 +118,5 @@ jobs:
       - name: Notify Slack
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text": "GITHUB HOSTED SonarQube analysis of calculator completed with status: ${{ needs.sonarqube.result }}."}' \
+          --data '{"text": "GITHUB HOSTED SonarQube and CodeQL analysis completed with status: ${{ needs.sonarqube.result }} and ${{ needs.codeql.result }}."}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
