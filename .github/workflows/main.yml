@@ -1,4 +1,4 @@
-name: Build, SonarCloud Analysis, CodeQL, and JFrog Upload Workflow
+name: Build, SonarCloud Analysis, CodeQL,  and JFrog Upload Workflow
 
 on:
   push:
