@@ -107,13 +107,14 @@ jobs:
 
       # Step 3: Build the project (important for Java analysis)
       - name: Build Java Project
-        run: mvn clean compile
+        run: mvn clean install -DskipTests
 
       # Step 4: Set up CodeQL
       - name: Set up CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: 'java'  # Specify the language for analysis
+          source-root: 'src/main/java'
 
       # Step 5: Perform CodeQL Analysis
       - name: Perform CodeQL Analysis
