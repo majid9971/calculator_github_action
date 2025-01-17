@@ -1,4 +1,4 @@
-name: Build, SonarCloud Analysis, CodeQL,  and JFrog Upload Workflow
+name: Build, SonarCloud Analysis, CodeQL, and JFrog Upload Workflow
 
 on:
   push:
@@ -6,6 +6,12 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write  # Required for CodeQL analysis
+  pull-requests: write
 
 jobs:
   sonarqube:
@@ -105,13 +111,13 @@ jobs:
 
       # Step 4: Set up CodeQL
       - name: Set up CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: 'java'  # Specify the language for analysis
 
       # Step 5: Perform CodeQL Analysis
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
      
   notify:
     runs-on: ubuntu-latest
